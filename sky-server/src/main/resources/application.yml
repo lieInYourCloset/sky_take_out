@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   profiles:
@@ -23,6 +23,7 @@ mybatis:
 
 logging:
   level:
+    org.springframework.web: trace # 查看springmvc的请求处理情况
     com:
       sky:
         mapper: debug
