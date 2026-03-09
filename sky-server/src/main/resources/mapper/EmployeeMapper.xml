@@ -2,4 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
+    <select id="pageQuery" resultType="com.sky.entity.Employee">
+        SELECT *
+        FROM employee
+        <where>
+            <if test="name != null">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+<!--            <if test="username != null">-->
+<!--                AND username LIKE CONCAT('%', #{username}, '%')-->
+<!--            </if>-->
+<!--            <if test="phone != null">-->
+<!--                AND phone LIKE CONCAT('%', #{phone}, '%')-->
+<!--            </if>-->
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateEmployeeStatus" parameterType="com.sky.entity.Employee">
+        UPDATE employee
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateEmployee" parameterType="com.sky.entity.Employee">
+        UPDATE employee
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex">sex = #{sex},</if>
+            <if test="idNumber">id_number = #{idNumber},</if>
+            <if test="updateTime">update_time = #{updateTime},</if>
+            <if test="updateUser">update_user = #{updateUser},</if>
+            <if test="status">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getById" resultType="com.sky.entity.Employee">
+        SELECT *
+        FROM employee
+        WHERE id = #{id}
+    </select>
 </mapper>
