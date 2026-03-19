@@ -106,14 +106,18 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
-//        try (Page<Object> page = PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize())) {
-//            List<Employee> employees = employeeMapper.pageQuery(employeePageQueryDTO);
-//            return new PageResult(page.getTotal(), employees);
-//        }
-        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
-        List<Employee> employees = page.getResult();
-        return new PageResult(page.getTotal(), employees);
+        // 1. 使用 try-with-resources 确保 Page 对象自动关闭（清理 ThreadLocal）
+        try (Page<Employee> page = PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize())) {
+
+            // 2. 执行查询：MyBatis 拦截器会处理分页逻辑
+            // 注意：此处不需要再次赋值给 List，直接从 page 对象获取即可，因为 page 本身就是一个 ArrayList<> 的子类
+            employeeMapper.pageQuery(employeePageQueryDTO);
+
+            // 3. 封装并返回结果
+            // page.getTotal() 获取总记录数，page.getResult() 获取当前页数据列表
+            return new PageResult(page.getTotal(), page.getResult());
+        }
+        // try 块结束时，page.close() 会被自动调用，内部执行 PageHelper.clearPage()
     }
 
     /**
