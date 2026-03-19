@@ -37,13 +37,13 @@ public class CategoryServiceImpl implements CategoryService {
         //设置账户状态为启用状态
         category.setStatus(StatusConstant.ENABLE);
 
-        //设置创建人和修改人
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
-
-        //设置创建时间和修改时间
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
+//        // 设置创建人和修改人
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+//
+//        // 设置创建时间和修改时间
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
 
         //保存员工信息到数据库
         Long id = categoryMapper.insert(category);
@@ -56,8 +56,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         BeanUtils.copyProperties(categoryDTO, category);
 
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
 
         //在数据库中修改分类
         categoryMapper.updateCategory(category);
@@ -70,8 +70,8 @@ public class CategoryServiceImpl implements CategoryService {
         category.setId(id);
         category.setStatus(status);
 
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
 
         //在数据库中修改分类
         categoryMapper.updateCategoryStatus(category);
