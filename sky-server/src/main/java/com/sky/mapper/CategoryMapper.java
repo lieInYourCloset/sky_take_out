@@ -49,8 +49,6 @@ public interface CategoryMapper {
     @Delete("delete from category where id = #{id}")
     void deleteCategoryById(Long id);
 
-
-
     /**
      * 分类分页查询
      *

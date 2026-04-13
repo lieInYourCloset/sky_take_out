@@ -48,7 +48,7 @@ public interface CategoryService {
     PageResult CategoryPageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
 
     /**
-     * 根据类型查询分类列表 TODO??
+     * 根据类型查询分类列表
      *
      * @param type
      * @return
