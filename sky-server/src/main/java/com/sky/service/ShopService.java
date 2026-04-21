@@ -3,7 +3,7 @@ package com.sky.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface AdminShopService {
+public interface ShopService {
 
     /**
      * 更新店铺状态

@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import com.sky.service.EmployeeService;
@@ -11,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 分类管理
  */
-@RestController
+@RestController("adminCategoryController")
 @RequestMapping("/admin/category")
 @Slf4j
 @Api(tags = "分类管理相关接口")
@@ -96,7 +99,7 @@ public class CategoryController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "根据类型查询分类列表接口")
-    public Result listCategory(@RequestParam Integer type) {
+    public Result<List<Category>> listCategory(@RequestParam Integer type) {
         log.info("根据类型查询分类列表：{}", type);
         return Result.success(categoryService.listCategoryByType(type));
     }

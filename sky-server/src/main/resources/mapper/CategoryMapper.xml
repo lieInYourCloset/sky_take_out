@@ -23,6 +23,9 @@
             <if test="name != null">
                 AND name LIKE CONCAT('%', #{name}, '%')
             </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
         </where>
         ORDER BY create_time DESC
     </select>

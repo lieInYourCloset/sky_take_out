@@ -1,13 +1,7 @@
 package com.sky.service;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
-import com.sky.entity.Category;
-import com.sky.entity.Dish;
-import com.sky.entity.Employee;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 
@@ -59,7 +53,7 @@ public interface DishService {
      * @param categoryId
      * @return
      */
-    List<Dish> queryDishByCategoryId(Long categoryId);
+    List<DishVO> queryDishByCategoryId(Long categoryId);
 
     /**
      * 根据id查询菜品

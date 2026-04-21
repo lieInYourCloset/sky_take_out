@@ -2,11 +2,10 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sky.entity.Category;
+import com.sky.constant.RedisConstant;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.entity.Employee;
-import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
@@ -14,10 +13,11 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +27,8 @@ public class DishServiceImpl implements DishService {
     private DishMapper dishMapper;
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      *  新增菜品
@@ -49,9 +51,12 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(list);
         }
         DishFlavor dishFlavor = new DishFlavor();
+
+        deleteDishCache();
     }
 
     @Override
+    @Transactional
     public void updateDish(com.sky.dto.DishDTO dishDTO) {
         //向菜品表更新一条数据
         Dish dish = new Dish();
@@ -65,17 +70,22 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.deleteByDishId(dish.getId());
             dishFlavorMapper.insertBatch(list);
         }
+        deleteDishCache();
     }
 
     @Override
+    @Transactional
     public void updateDishStatus(Long id, Integer status) {
         Dish dish = new Dish();
         dish.setId(id);
         dish.setStatus(status);
         dishMapper.updateDish(dish);
+
+        deleteDishCache();
     }
 
     @Override
+    @Transactional
     public void deleteDishById(java.util.List<Long> idList) {
         if (idList != null && !idList.isEmpty()) {
             idList.forEach(id -> {
@@ -83,6 +93,7 @@ public class DishServiceImpl implements DishService {
                 dishFlavorMapper.deleteByDishId(id);
             });
         }
+        deleteDishCache();
     }
 
     @Override
@@ -94,8 +105,15 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> queryDishByCategoryId(Long categoryId) {
-        return dishMapper.queryDishByCategoryId(categoryId);
+    public List<DishVO> queryDishByCategoryId(Long categoryId) {
+        List<DishVO> dishVOList = (List<DishVO>) redisTemplate.opsForHash().get(RedisConstant.DISHES_IN_CATEGORY, categoryId.toString());
+        if  (dishVOList == null) {
+            List<DishVO> rawList = dishMapper.queryDishByCategoryId(categoryId);
+            // 将结果包装成标准的 ArrayList
+            dishVOList = new ArrayList<>(rawList);
+            redisTemplate.opsForHash().put(RedisConstant.DISHES_IN_CATEGORY, categoryId.toString(), dishVOList);
+        }
+        return dishVOList;
     }
 
     @Override
@@ -106,5 +124,9 @@ public class DishServiceImpl implements DishService {
         org.springframework.beans.BeanUtils.copyProperties(dish, dishVO);
         dishVO.setFlavors(flavors);
         return dishVO;
+    }
+
+    private void deleteDishCache(){
+        redisTemplate.delete(RedisConstant.DISHES_IN_CATEGORY);
     }
 }

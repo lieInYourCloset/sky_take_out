@@ -63,7 +63,7 @@ public interface CategoryMapper {
      * @param type
      * @return
      */
-    @Select("select id, type, name, sort, status from category where type = #{type} order by sort asc")
+    @Select("select * from category where type = #{type} order by sort asc")
     List<Category> listCategoryByType(Integer type);
 
 }
