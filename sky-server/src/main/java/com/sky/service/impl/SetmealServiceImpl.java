@@ -3,8 +3,6 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.RedisConstant;
-import com.sky.dto.DishDTO;
-import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.*;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
@@ -56,7 +54,7 @@ public class SetmealServiceImpl implements SetmealService {
         //保存套餐和菜品的关联关系
         setmealDishMapper.insertBatch(setmealDishes); }
 
-        deleteDishCache();
+        deleteSetmealCache();
     }
 
     @Override
@@ -77,7 +75,7 @@ public class SetmealServiceImpl implements SetmealService {
         //重新插入套餐和菜品的关联关系，操作setmeal_dish表，执行insert
         setmealDishMapper.insertBatch(setmealDishes); //TODO: 先删除后插入的方式有问题，创建时间丢失了，创建时间变得固定和更新时间一样。另外也浪费性能
 
-        deleteDishCache();
+        deleteSetmealCache();
     }
 
     @Override
@@ -87,7 +85,7 @@ public class SetmealServiceImpl implements SetmealService {
         setmeal.setStatus(status);
         setmealMapper.updateSetmeal(setmeal);
 
-        deleteDishCache();
+        deleteSetmealCache();
     }
 
     @Override
@@ -100,7 +98,7 @@ public class SetmealServiceImpl implements SetmealService {
                 setmealDishMapper.deleteBySetmealId(id);
             });
         }
-        deleteDishCache();
+        deleteSetmealCache();
     }
 
     @Override
@@ -122,7 +120,23 @@ public class SetmealServiceImpl implements SetmealService {
         return setmealVO;
     }
 
-    private void deleteDishCache(){
+    @Override
+    public List<Setmeal> querySetmealByCategoryId(Long categoryId) {
+        //先查redis看有没有缓存
+        List<Setmeal> setmealList = (List<Setmeal>) redisTemplate.opsForHash().get(RedisConstant.SETMEALS_IN_CATEGORY, categoryId.toString());
+        //没有缓存时查sql并加入缓存
+        if  (setmealList == null) {
+            List<Setmeal> rawList = setmealMapper.querySetmealByCategoryId(categoryId);
+            // 将结果包装成标准的 ArrayList
+            setmealList = new ArrayList<>(rawList);
+            redisTemplate.opsForHash().put(RedisConstant.DISHES_IN_CATEGORY, categoryId.toString(), setmealList);
+        }
+        return setmealList;
+    }
+
+    private void deleteSetmealCache(){
         redisTemplate.delete(RedisConstant.SETMEALS_IN_CATEGORY);
     }
+
+
 }

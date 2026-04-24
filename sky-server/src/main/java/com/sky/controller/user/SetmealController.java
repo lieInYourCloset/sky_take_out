@@ -1,7 +1,9 @@
 package com.sky.controller.user;
 
+import com.sky.entity.Setmeal;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.service.SetmealService;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +25,7 @@ import java.util.List;
 public class SetmealController {
 
     @Autowired
-    private DishService dishService;
+    private SetmealService setmealService;
 
     /**
      * 根据分类id查询菜品信息
@@ -32,9 +34,9 @@ public class SetmealController {
      */
     @GetMapping("/list")
     @ApiOperation("根据分类id查询套餐信息接口")
-    public Result<List<DishVO>> getByCategoryId(Long categoryId) {
+    public Result<List<Setmeal>> getByCategoryId(Long categoryId) {
         log.info("根据分类id查询菜品信息：categoryId={}", categoryId);
-        List<DishVO> list = dishService.queryDishVOByCategoryId(categoryId);
+        List<Setmeal> list = setmealService.querySetmealByCategoryId(categoryId);
         return Result.success(list);
     }
 }

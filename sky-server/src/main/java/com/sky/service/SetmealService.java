@@ -4,6 +4,7 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
@@ -13,21 +14,21 @@ import java.util.List;
 public interface SetmealService {
 
     /**
-     * 新增菜品
+     * 新增套餐
      *
      * @param setmealDTO
      */
     void addSetmeal(SetmealDTO setmealDTO);
 
     /**
-     * 修改菜品
+     * 修改套餐
      *
      * @param setmealDTO
      */
     void updateSetmeal(SetmealDTO setmealDTO);
 
     /**
-     * 菜品起售、停售
+     * 套餐起售、停售
      *
      * @param id
      * @param status
@@ -35,7 +36,7 @@ public interface SetmealService {
      void updateSetmealStatus(Long id, Integer status);
 
     /**
-     * 根据id批量删除菜品
+     * 根据id批量删除套餐
      *
      * @param idList
      * @return
@@ -43,7 +44,7 @@ public interface SetmealService {
      void deleteSetmealById(List<Long> idList);
 
     /**
-     * 菜品分页查询
+     * 套餐分页查询
      *
      * @param setmealPageQueryDTO
      * @return
@@ -51,10 +52,17 @@ public interface SetmealService {
      PageResult setmealPageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
     /**
-     * 根据id查询菜品
+     * 根据id查询套餐
      *
      * @param id
      * @return
      */
     SetmealVO querySetmealById(Long id);
+
+    /**
+     * 根据分类id查询套餐
+     *
+     * @param categoryId
+     */
+    List<Setmeal> querySetmealByCategoryId(Long categoryId);
 }
