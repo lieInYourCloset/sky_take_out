@@ -105,15 +105,22 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishVO> queryDishByCategoryId(Long categoryId) {
+    public List<DishVO> queryDishVOByCategoryId(Long categoryId) {
+        //先查redis看有没有缓存
         List<DishVO> dishVOList = (List<DishVO>) redisTemplate.opsForHash().get(RedisConstant.DISHES_IN_CATEGORY, categoryId.toString());
+        //没有缓存时查sql并加入缓存
         if  (dishVOList == null) {
-            List<DishVO> rawList = dishMapper.queryDishByCategoryId(categoryId);
+            List<DishVO> rawList = dishMapper.queryDishVOByCategoryId(categoryId);
             // 将结果包装成标准的 ArrayList
             dishVOList = new ArrayList<>(rawList);
             redisTemplate.opsForHash().put(RedisConstant.DISHES_IN_CATEGORY, categoryId.toString(), dishVOList);
         }
         return dishVOList;
+    }
+
+    @Override
+    public List<Dish> queryDishByCategoryId(Long categoryId) {
+        return dishMapper.queryDishByCategoryId(categoryId);
     }
 
     @Override

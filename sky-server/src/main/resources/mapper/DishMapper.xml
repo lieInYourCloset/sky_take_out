@@ -46,7 +46,7 @@
         </collection>
     </resultMap>
     
-    <select id="queryDishByCategoryId" resultMap="DishVOMap">
+    <select id="queryDishVOByCategoryId" resultMap="DishVOMap">
         SELECT d.id,
             d.name,
             d.category_id,
@@ -63,6 +63,22 @@
         FROM dish AS d
             JOIN category AS c ON d.category_id = c.id
             LEFT JOIN dish_flavor df ON d.id = df.dish_id
+            WHERE d.category_id = #{categoryId} AND d.status = 1
+            ORDER BY d.update_time DESC
+    </select>
+
+    <select id="queryDishByCategoryId" resultType="com.sky.vo.DishVO">
+        SELECT d.id,
+            d.name,
+            d.category_id,
+            d.price,
+            d.image,
+            d.description,
+            d.status,
+            d.update_time,
+            c.name as category_name
+        FROM dish AS d
+            JOIN category AS c ON d.category_id = c.id
             WHERE d.category_id = #{categoryId} AND d.status = 1
             ORDER BY d.update_time DESC
     </select>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+    <update id="updateSetmeal" parameterType="com.sky.entity.Setmeal">
+        UPDATE setmeal
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        SELECT * FROM setmeal
+        <where>
+            <if test="name != null">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND category_id LIKE CONCAT('%', #{categoryId}, '%')
+            </if>
+            <if test="status != null">
+                AND status LIKE CONCAT('%', #{status}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+<!--    <resultMap id="DishVOMap" type="com.sky.vo.DishVO" autoMapping="true">-->
+<!--        <id column="id" property="id"/>-->
+<!--        <result column="category_name" property="categoryName"/>-->
+<!--        <collection property="flavors" ofType="com.sky.entity.DishFlavor" autoMapping="true">-->
+<!--            <id column="dish_flavor_id" property="id"/>-->
+<!--            <result column="dish_flavor_name" property="name"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+<!--    -->
+<!--    <select id="querySetmealByCategoryId" resultMap="DishVOMap">-->
+<!--        SELECT d.id,-->
+<!--            d.name,-->
+<!--            d.category_id,-->
+<!--            d.price,-->
+<!--            d.image,-->
+<!--            d.description,-->
+<!--            d.status,-->
+<!--            d.update_time,-->
+<!--            c.name as category_name,-->
+<!--            df.id as dish_flavor_id,-->
+<!--            df.dish_id,-->
+<!--            df.name as dish_flavor_name,-->
+<!--            df.value-->
+<!--        FROM dish AS d-->
+<!--            JOIN category AS c ON d.category_id = c.id-->
+<!--            LEFT JOIN dish_flavor df ON d.id = df.dish_id-->
+<!--            WHERE d.category_id = #{categoryId} AND d.status = 1-->
+<!--            ORDER BY d.update_time DESC-->
+<!--    </select>-->
+
+
+</mapper>

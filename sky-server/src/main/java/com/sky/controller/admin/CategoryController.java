@@ -99,7 +99,7 @@ public class CategoryController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "根据类型查询分类列表接口")
-    public Result<List<Category>> listCategory(@RequestParam Integer type) {
+    public Result<List<Category>> listCategory(Integer type) {
         log.info("根据类型查询分类列表：{}", type);
         return Result.success(categoryService.listCategoryByType(type));
     }

@@ -54,7 +54,14 @@ public interface DishMapper {
      *
      * @param categoryId
      */
-    List<DishVO> queryDishByCategoryId(Long categoryId);
+    List<DishVO> queryDishVOByCategoryId(Long categoryId);
+
+    /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId
+     */
+    List<Dish> queryDishByCategoryId(Long categoryId);
 
     /**
      * 根据类型查询菜品数量

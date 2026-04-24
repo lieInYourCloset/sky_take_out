@@ -53,7 +53,7 @@ public class DishController {
      */
     @GetMapping("/page")
     @ApiOperation("菜品查询页面")
-    public Result<PageResult> page(@RequestBody DishPageQueryDTO dishPageQueryDTO) {
+    public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO) {
         log.info("菜品查询页面：{}", dishPageQueryDTO);
         PageResult pageResult = dishService.dishPageQuery(dishPageQueryDTO);
         return Result.success(pageResult);
@@ -94,23 +94,35 @@ public class DishController {
      * @return
      */
     @GetMapping("/{id}")
-    @ApiOperation("根据id查询菜品信息接口")
+    @ApiOperation("根据id查询菜品列表接口")
     public Result<DishVO> getById(@PathVariable Long id) {
-        log.info("根据id查询菜品信息：id={}", id);
+        log.info("根据id查询菜品列表：id={}", id);
         DishVO dishVO = dishService.queryDishByIdWithFlavors(id);
         return Result.success(dishVO);
     }
 
+//    /**
+//     * 根据分类id查询菜品信息
+//     * @param categoryId
+//     * @return
+//     */
+//    @GetMapping("/list")
+//    @ApiOperation("根据分类id查询dishVO接口")
+//    public Result<List<DishVO>> getDishVOListByCategoryId(Long categoryId) {
+//        log.info("根据分类id查询dishVO接口：CategoryId={}", categoryId);
+//        List<DishVO> list = dishService.queryDishVOByCategoryId(categoryId);
+//        return Result.success(list);
+//    }
+
     /**
-     * 根据分类id查询菜品信息
+     * 根据分类id查询菜品
      * @param categoryId
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("根据分类id查询菜品信息接口")
-    public Result<List<DishVO>> getByCategoryId(Long categoryId) {
-        log.info("根据分类id查询菜品信息接口：CategoryId={}", categoryId);
-        List<DishVO> list = dishService.queryDishByCategoryId(categoryId);
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<Dish>> getDishListByCategoryId(Long categoryId){
+        List<Dish> list = dishService.queryDishByCategoryId(categoryId);
         return Result.success(list);
     }
 }
