@@ -16,4 +16,16 @@
     <select id="querySetmealDishesBySetmealId" resultType="com.sky.entity.SetmealDish">
         SELECT * FROM setmeal_dish WHERE setmeal_id = #{setmealId}
     </select>
+
+    <select id="queryDishesBySetmealId" resultType="com.sky.vo.DishItemVO">
+        SELECT
+        sd.copies,
+        s.description,
+        s.image,
+        sd.name
+        FROM setmeal_dish sd
+        JOIN setmeal s ON sd.setmeal_id = s.id
+        WHERE sd.setmeal_id = #{setmealId}
+    </select>
+
 </mapper>

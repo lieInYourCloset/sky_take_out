@@ -8,6 +8,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +77,7 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDishMapper.insertBatch(setmealDishes); //TODO: 先删除后插入的方式有问题，创建时间丢失了，创建时间变得固定和更新时间一样。另外也浪费性能
 
         deleteSetmealCache();
+        deleteDishesInSetmealCache();
     }
 
     @Override
@@ -99,6 +101,7 @@ public class SetmealServiceImpl implements SetmealService {
             });
         }
         deleteSetmealCache();
+        deleteDishesInSetmealCache();
     }
 
     @Override
@@ -134,8 +137,26 @@ public class SetmealServiceImpl implements SetmealService {
         return setmealList;
     }
 
+    @Override
+    public List<DishItemVO> querydishesBySetmealId(Long setmealId) {
+        //先查redis看有没有缓存
+        List<DishItemVO> dishItemVOList = (List<DishItemVO>) redisTemplate.opsForHash().get(RedisConstant.SETMEALS_IN_CATEGORY, setmealId.toString());
+        //没有缓存时查sql并加入缓存
+        if  (dishItemVOList == null) {
+            List<DishItemVO> rawList = setmealDishMapper.queryDishesBySetmealId(setmealId);
+            // 将结果包装成标准的 ArrayList
+            dishItemVOList = new ArrayList<>(rawList);
+            redisTemplate.opsForHash().put(RedisConstant.DISHES_IN_CATEGORY, setmealId.toString(), dishItemVOList);
+        }
+        return dishItemVOList;
+    }
+
     private void deleteSetmealCache(){
         redisTemplate.delete(RedisConstant.SETMEALS_IN_CATEGORY);
+    }
+
+    private void deleteDishesInSetmealCache(){
+        redisTemplate.delete(RedisConstant.DISHES_IN_SETMEAL);
     }
 
 
