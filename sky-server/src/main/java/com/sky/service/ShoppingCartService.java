@@ -1,19 +1,35 @@
 package com.sky.service;
 
+import com.sky.dto.ShoppingCartDTO;
+import com.sky.entity.ShoppingCart;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface ShoppingCartService {
 
     /**
-     * 添加购物车
+     * 添加菜品或套餐到购物车
      *
-     * @param status
+     * @param shoppingCartDTO
      */
-    void addShoppingCart(Integer status);
+    void addShoppingCart(ShoppingCartDTO shoppingCartDTO);
 
     /**
-     * 管理端查询店铺状态
+     * 从购物车删除菜品或套餐
+     *
+     * @param shoppingCartDTO
      */
-    Integer getStatus();
+    void subShoppingCart(ShoppingCartDTO shoppingCartDTO);
+
+    /**
+     * 查看购物车
+     */
+    List<ShoppingCart> getShoppingCart();
+
+    /**
+     * 清空购物车
+     */
+    void cleanShoppingCart();
 }

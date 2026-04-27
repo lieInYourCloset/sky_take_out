@@ -23,33 +23,33 @@ import java.util.List;
 @RestController("ShoppingCartController")
 @RequestMapping("/user/shoppingcart")
 @Slf4j
-@Api(tags = "分类管理相关接口")
+@Api(tags = "购物车相关接口")
 public class ShoppingCartController {
 
-//    @Autowired
-//    private ShoppingCartService shoppingCartService;
-//
-//    @PostMapping("/add")
-//    public Result addShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
-//        shoppingCartService.addShoppingCart(shoppingCartDTO);
-//        return Result.success();
-//    }
-//
-//    @PostMapping("/sub")
-//    public Result addShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
-//        shoppingCartService.addShoppingCart(shoppingCartDTO);
-//        return Result.success();
-//    }
-//
-//    @GetMapping("/list")
-//    public Result addShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
-//        shoppingCartService.addShoppingCart(shoppingCartDTO);
-//        return Result.success();
-//    }
-//
-//    @DeleteMapping("/clean")
-//    public Result cleanShoppingCart() {
-//        shoppingCartService.cleanShoppingCart();
-//        return Result.success();
-//    }
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
+    @PostMapping("/add")
+    public Result addShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        shoppingCartService.addShoppingCart(shoppingCartDTO);
+        return Result.success();
+    }
+
+    @PostMapping("/sub")
+    public Result subShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        shoppingCartService.subShoppingCart(shoppingCartDTO);
+        return Result.success();
+    }
+
+    @GetMapping("/list")
+    public Result<List<ShoppingCart>> getShoppingCart() {
+        List<ShoppingCart> l = shoppingCartService.getShoppingCart();
+        return Result.success(l);
+    }
+
+    @DeleteMapping("/clean")
+    public Result cleanShoppingCart() {
+        shoppingCartService.cleanShoppingCart();
+        return Result.success();
+    }
 }
