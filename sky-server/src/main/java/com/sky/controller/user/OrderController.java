@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * 订单管理
  */
-@RestController
+@RestController("userOrderController")
 @RequestMapping("/user/order")
 @Slf4j
 @Api(tags = "用户订单接口")
